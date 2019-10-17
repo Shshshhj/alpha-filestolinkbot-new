@@ -12,20 +12,11 @@ import math
 import os
 import time
 
-# the secret configuration specific things
-if bool(os.environ.get("WEBHOOK", False)):
-    from sample_config import Config
-else:
-    from config import Config
 
-# the Strings used for this "thing"
-from translation import Translation
-
-
-def progress_for_pyrogram(client, current, total, ud_type, message_id, chat_id, start):
+async def progress_for_pyrogram(current, total, client, ud_type, message_id, chat_id, start):
     now = time.time()
     diff = now - start
-    if round(diff % 70.00) == 0 or current == total:
+    if round(diff % 10.00) == 0 or current == total:
         # if round(current / total * 100, 0) % 5 == 0:
         percentage = current * 100 / total
         speed = current / diff
@@ -33,8 +24,8 @@ def progress_for_pyrogram(client, current, total, ud_type, message_id, chat_id, 
         time_to_completion = round((total - current) / speed) * 1000
         estimated_total_time = elapsed_time + time_to_completion
 
-        elapsed_time = TimeFormatter(milliseconds=elapsed_time)
-        estimated_total_time = TimeFormatter(milliseconds=estimated_total_time)
+        elapsed_time = await TimeFormatter(milliseconds=elapsed_time)
+        estimated_total_time = await TimeFormatter(milliseconds=estimated_total_time)
 
         progress = "[{0}{1}] \nP: {2}%\n".format(
             ''.join(["■" for i in range(math.floor(percentage / 5))]),
@@ -42,14 +33,14 @@ def progress_for_pyrogram(client, current, total, ud_type, message_id, chat_id, 
             round(percentage, 2))
 
         tmp = progress + "{0} of {1}\nSpeed: {2}/s\nETA: {3}\n".format(
-            humanbytes(current),
-            humanbytes(total),
-            humanbytes(speed),
+            await humanbytes(current),
+            await humanbytes(total),
+            await humanbytes(speed),
             # elapsed_time if elapsed_time != '' else "0 s",
             estimated_total_time if estimated_total_time != '' else "0 s"
         )
         try:
-            client.edit_message_text(
+            await client.edit_message_text(
                 chat_id,
                 message_id,
                 text="{}\n {}".format(
@@ -61,7 +52,7 @@ def progress_for_pyrogram(client, current, total, ud_type, message_id, chat_id, 
             pass
 
 
-def humanbytes(size):
+async def humanbytes(size):
     # https://stackoverflow.com/a/49361727/4723940
     # 2**10 = 1024
     if not size:
@@ -75,7 +66,7 @@ def humanbytes(size):
     return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
 
 
-def TimeFormatter(milliseconds: int) -> str:
+async def TimeFormatter(milliseconds: int) -> str:
     seconds, milliseconds = divmod(int(milliseconds), 1000)
     minutes, seconds = divmod(seconds, 60)
     hours, minutes = divmod(minutes, 60)
