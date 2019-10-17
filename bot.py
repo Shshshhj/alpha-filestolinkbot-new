@@ -28,7 +28,8 @@ if __name__ == "__main__" :
         root="plugins"
     )
     app = pyrogram.Client(
-        session_name=Config.TG_BOT_TOKEN,
+        "filestolinkbot",
+        bot_token=Config.TG_BOT_TOKEN,
         api_id=Config.APP_ID,
         api_hash=Config.API_HASH,
         plugins=plugins
