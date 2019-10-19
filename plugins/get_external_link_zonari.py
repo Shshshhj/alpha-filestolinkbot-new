@@ -12,7 +12,7 @@ import os
 #import requests
 import subprocess
 import time
-
+import asyncio
 
 # the secret configuration specific things
 if bool(os.environ.get("WEBHOOK", False)):
@@ -120,9 +120,10 @@ async def get_link(bot, update):
     )
     try:
         logger.info(command_to_exec)
-        t_response = subprocess.check_output(
-            command_to_exec,
-            stderr=subprocess.STDOUT
+        t_response = await asyncio.create_subprocess_exec(
+            *command_to_exec,
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
         )
     except subprocess.CalledProcessError as exc:
         logger.info(f"Status : FAIL {exc.returncode} {exc.output}")
