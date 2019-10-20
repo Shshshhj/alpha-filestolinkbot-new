@@ -52,7 +52,8 @@ async def get_link(bot, update):
         return
     if update.from_user.id not in users:
         users.append(update.from_user.id)
-    else:pass
+    else:
+      pass
         await bot.send_message(
             chat_id=update.chat.id,
             text=Translation.ABS_TEXT,
