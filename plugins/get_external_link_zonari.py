@@ -66,7 +66,7 @@ async def get_link(bot, update):
     else:
         await bot.send_message(
             chat_id=update.chat.id,
-            text=Translation.IS_USING,
+            text=Translation.ABS_TEXT,
             reply_to_message_id=update.message_id
         )
         return
