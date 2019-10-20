@@ -8,6 +8,7 @@ class Translation(object):
 
 © Source Code : [SpEcHlDe](https://github.com/SpEcHiDe/AnyDLBot)
 """
+    IS_USING = "Please wait !!!"
     RENAME_403_ERR = "Sorry. You are not permitted to rename this file."
     ABS_TEXT = " Please don't be selfish."
     # UPGRADE_TEXT = "no one gonna help you 🤣🤣🤣🤣"
@@ -44,7 +45,7 @@ Expires on: {}"""
     REPLY_TO_DOC_GET_LINK = "👉 Forward any files to this bot,and bot will generate its directlink.\n👉Do not send multiple files at a time.\n👉If you dont get directlink after 1 hour,forward that file again to the bot\n👉Subscribe our channel for bot updates @filestolink\n👉Direct links are only for personal use,do not share with others.we are not responsible for any content that you generates direct links.\n\n © Source Code : [SpEcHlDe](https://github.com/SpEcHiDe/AnyDLBot) "
     REPLY_TO_DOC_FOR_C2V = "Reply to a Telegram media to convert"
     REPLY_TO_DOC_FOR_RENAME_FILE = "Reply to a Telegram media to /rename with custom thumbnail"
-    AFTER_GET_DL_LINK = "<b>Direct Link generated</b> 👇\n \n{} \n \n<i>Generated link will expire in {} days.</i>\n \nJoin our channel @filestolink."
+    AFTER_GET_DL_LINK = "<b>Direct Link</b> <a href=\"{}\">generated</a>\n\nfilename: {}\nsize: {}\nexpire_in: {} days\n\nJoin our channel @filestolink"
     FF_MPEG_RO_BOT_RE_SURRECT_ED = """Syntax: /trim HH:MM:SS [HH:MM:SS]"""
     FF_MPEG_RO_BOT_STEP_TWO_TO_ONE = "First send /downloadmedia to any media so that it can be downloaded to my local. \nSend /storageinfo to know the media, that is currently downloaded."
     FF_MPEG_RO_BOT_STOR_AGE_INFO = "Video Duration: {}\nSend /clearffmpegmedia to delete this media, from my storage.\nSend /trim HH:MM:SS [HH:MM:SS] to cu[l]t a small photo / video, from the above media."

@@ -20,18 +20,17 @@ if bool(os.environ.get("WEBHOOK", False)):
 else:
     from config import Config
 
-# the Strings used for this "thing"
 from translation import Translation
 
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 from helper_funcs.display_progress import progress_for_pyrogram
+users = []
 
 
 @pyrogram.Client.on_message()
 async def get_link(bot, update):
-    # print(update)
     if update.text == "/start":
         await bot.send_message(
             chat_id=update.chat.id,
@@ -72,9 +71,20 @@ async def get_link(bot, update):
             parse_mode="html"
         )
         return
+
     logger.info(update.from_user)
 
-    download_location = Config.DOWNLOAD_LOCATION + "/"
+    if update.from_user.id not in users:
+        users.append(update.from_user.id)
+    else:
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text=Translation.IS_USING,
+            reply_to_message_id=update.message_id
+        )
+        return False
+
+    download_location = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + "/"
     a = await bot.send_message(
         chat_id=update.chat.id,
         text=Translation.DOWNLOAD_START,
@@ -93,23 +103,26 @@ async def get_link(bot, update):
             c_time
         )
     )
-    #download_extension = after_download_file_name.rsplit(".", 1)[-1]
     await bot.edit_message_text(
         text=Translation.SAVED_RECVD_DOC_FILE,
         chat_id=update.chat.id,
         message_id=a.message_id
     )
 
-    #filesize = os.path.getsize(after_download_file_name)
+    filesize = os.path.getsize(after_download_file_name)
     filename = os.path.basename(after_download_file_name)
-    
+
     url = "https://transfer.zonari.us/{}".format(filename)
     max_days = "2"
     command_to_exec = [
-        "curl", "-g",
-        # "-H", 'Max-Downloads: 999',
-        "-H", 'Max-Days: 2', # + max_days + '',
-        "--upload-file", after_download_file_name,
+        "curl",
+        "-g",
+        # "-H",
+        # 'Max-Downloads: 999',
+        "-H",
+        'Max-Days: 2', # + max_days + '',
+        "--upload-file",
+        after_download_file_name,
         url
     ]
 
@@ -125,28 +138,34 @@ async def get_link(bot, update):
         stderr=asyncio.subprocess.PIPE,
     )
     if t_response.returncode:
-        logger.info(f"Status : FAIL {t_response.stderr}")
+        error = f"ERROR: {t_response.stderr.decode()}"
+        logger.info(error)
         await bot.edit_message_text(
             chat_id=update.chat.id,
-            text=exc.output.decode("UTF-8"),
+            text=error,
             message_id=a.message_id
         )
+        users.remove(update.from_user.id)
         return False
     else:
         logger.info(t_response.stdout)
         link = t_response.stdout.decode()
 
-        #shorten_api_url = "http://ouo.io/api/{}?s={}".format(Config.OUO_IO_API_KEY, t_response_arry)
-        #adfulurl = requests.get(shorten_api_url).text
-        
     await bot.edit_message_text(
         chat_id=update.chat.id,
-        text=Translation.AFTER_GET_DL_LINK.format(link, max_days),
+        text=Translation.AFTER_GET_DL_LINK.format(
+            link,
+            filename,
+            filesize,
+            max_days
+        ),
         parse_mode="html",
         message_id=a.message_id,
         disable_web_page_preview=True
     )
+
     try:
+        users.remove(update.from_user.id)
         os.remove(after_download_file_name)
     except:
         pass
