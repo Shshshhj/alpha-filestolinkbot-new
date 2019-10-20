@@ -31,38 +31,7 @@ users = []
 
 @pyrogram.Client.on_message()
 async def get_link(bot, update):
-    if update.text == "/start":
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=Translation.START_TEXT,
-            reply_to_message_id=update.message_id
-        )
-        return False
-    elif update.text == "/help" or update.text == "/about":
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=Translation.HELP_USER,
-            parse_mode="html",
-            disable_web_page_preview=True,
-            reply_to_message_id=update.message_id
-        )
-        return False
-    elif update.reply_to_message is not None and update.text == "/getlink":
-        reply_message = update.reply_to_message
-    elif update.reply_to_message is None and update.text == "/getlink":
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=Translation.REPLY_TO_DOC_GET_LINK,
-            reply_to_message_id=update.message_id
-        )
-        return False
-    elif update.document is not None or update.video is not None or update.photo is not None or update.audio is not None or update.animation is not None or update.voice is not None or update.sticker is not None or update.video_note is not None:
-        reply_message = update
-    else:
-        return False
-
-    # print(update)
-    if str(update.from_user.id) in Config.BANNED_USERS:
+    if update.from_user.id in Config.BANNED_USERS:
         await bot.send_message(
             chat_id=update.chat.id,
             text=Translation.ABUSIVE_USERS,
@@ -71,9 +40,27 @@ async def get_link(bot, update):
             parse_mode="html"
         )
         return
-
+    elif update.text == "/start":
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text=Translation.START_TEXT,
+            reply_to_message_id=update.message_id
+        )
+        return
+    elif update.text == "/help" or update.text == "/about":
+        await bot.send_message(
+            chat_id=update.chat.id,
+            text=Translation.HELP_USER,
+            parse_mode="html",
+            disable_web_page_preview=True,
+            reply_to_message_id=update.message_id
+        )
+        return
+    elif update.document is not None or update.video is not None or update.photo is not None or update.audio is not None or update.animation is not None or update.voice is not None or update.sticker is not None or update.video_note is not None:
+        reply_message = update
+    else:
+        return
     logger.info(update.from_user)
-
     if update.from_user.id not in users:
         users.append(update.from_user.id)
     else:
@@ -82,8 +69,7 @@ async def get_link(bot, update):
             text=Translation.IS_USING,
             reply_to_message_id=update.message_id
         )
-        return False
-
+        return
     download_location = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + "/"
     a = await bot.send_message(
         chat_id=update.chat.id,
@@ -108,7 +94,6 @@ async def get_link(bot, update):
         chat_id=update.chat.id,
         message_id=a.message_id
     )
-
     filesize = os.path.getsize(after_download_file_name)
     filename = os.path.basename(after_download_file_name)
 
@@ -150,7 +135,6 @@ async def get_link(bot, update):
     else:
         logger.info(t_response.stdout)
         link = t_response.stdout.decode()
-
     await bot.edit_message_text(
         chat_id=update.chat.id,
         text=Translation.AFTER_GET_DL_LINK.format(
@@ -163,7 +147,6 @@ async def get_link(bot, update):
         message_id=a.message_id,
         disable_web_page_preview=True
     )
-
     try:
         users.remove(update.from_user.id)
         os.remove(after_download_file_name)
