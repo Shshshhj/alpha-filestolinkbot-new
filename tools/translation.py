@@ -20,11 +20,11 @@ class Translation(object):
     SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully."
     UPLOAD_START = "Started to upload.."
     AFTER_GET_DL_LINK = """
-<b>Direct Link</b> <a href=\"{}\">generated</a>
+<b>Direct Link</b> <a href=\"{}\">generated</a> !
 
-filename: {}
-size: {}
-expire_in: {} days
+Name: {}
+Size: {}
+Expiry: {} days
 
 Join our channel @filestolink
     """

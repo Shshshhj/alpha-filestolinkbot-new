@@ -15,7 +15,7 @@ import time
 async def progress_for_pyrogram(current, total, client, ud_type, message_id, chat_id, start):
     now = time.time()
     diff = now - start
-    if round(diff % 10.00) == 0 or current == total:
+    if round(diff % 5.00) == 0 or current == total:
         # if round(current / total * 100, 0) % 5 == 0:
         percentage = current * 100 / total
         speed = current / diff
@@ -26,7 +26,7 @@ async def progress_for_pyrogram(current, total, client, ud_type, message_id, cha
         elapsed_time = await TimeFormatter(milliseconds=elapsed_time)
         estimated_total_time = await TimeFormatter(milliseconds=estimated_total_time)
 
-        progress = "[{0}{1}] \nP: {2}%\n".format(
+        progress = "{0}{1} \nP: {2}%\n".format(
             ''.join(["■" for i in range(math.floor(percentage / 5))]),
             ''.join(["□" for i in range(20 - math.floor(percentage / 5))]),
             round(percentage, 2))
