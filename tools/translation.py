@@ -23,6 +23,6 @@ Size: {}
 Expiry: {} days
 Link : {}
 
-Join our channel @filestolink
+<i>Join our channel</i> @filestolink
     """
     ABUSIVE_USERS = "You got BANNED bro..."
