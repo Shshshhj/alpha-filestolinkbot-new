@@ -127,10 +127,10 @@ async def get_link(bot, update):
     await bot.edit_message_text(
         chat_id=update.chat.id,
         text=Translation.AFTER_GET_DL_LINK.format(
-            link,
             filename,
             await humanbytes(filesize),
-            max_days
+            max_days,
+            link
         ),
         parse_mode="html",
         message_id=a.message_id,
