@@ -50,15 +50,15 @@ async def get_link(bot, update):
         reply_message = update
     else:
         return
-    if update.from_user.id not in users:
-        users.append(update.from_user.id)
-    else:
-        await bot.send_message(
-            chat_id=update.chat.id,
-            text=Translation.ABS_TEXT,
-            reply_to_message_id=update.message_id
-        )
-        return
+    #if update.from_user.id not in users:
+    #    users.append(update.from_user.id)
+   # else:
+    #    await bot.send_message(
+     #       chat_id=update.chat.id,
+     #       text=Translation.ABS_TEXT,
+      #      reply_to_message_id=update.message_id
+      #  )
+      #  return
     download_location = Config.DOWNLOAD_LOCATION + "/" + str(update.from_user.id) + "/"
     a = await bot.send_message(
         chat_id=update.chat.id,
