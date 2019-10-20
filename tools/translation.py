@@ -16,12 +16,12 @@ class Translation(object):
     SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully...📥"
     UPLOAD_START = "Started to upload...📤"
     AFTER_GET_DL_LINK = """
-<b>Direct Link</b> <a href=\"{}\">generated</a> !
+<b>Direct Link generated</b>👇 <a href=\"{}\">generated</a> !
 
 Name: {}
 Size: {}
 Expiry: {} days
-
+Link : \"{}\"
 Join our channel @filestolink
     """
     ABUSIVE_USERS = "You got BANNED bro..."
