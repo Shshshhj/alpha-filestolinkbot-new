@@ -21,7 +21,7 @@ class Translation(object):
 Name: {}
 Size: {}
 Expiry: {} days
-
+Link : "{}"
 Join our channel @filestolink
     """
     ABUSIVE_USERS = "You got BANNED bro..."
