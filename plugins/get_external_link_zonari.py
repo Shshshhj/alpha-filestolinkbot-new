@@ -131,7 +131,7 @@ async def get_link(bot, update):
             message_id=a.message_id
         )
         users.remove(update.from_user.id)
-        return False
+        return
     else:
         logger.info(t_response.stdout)
         link = t_response.stdout.decode()
