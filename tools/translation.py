@@ -10,11 +10,11 @@ class Translation(object):
 
 © Source Code : [SpEcHlDe](https://github.com/SpEcHiDe/AnyDLBot)
     """
-    ABS_TEXT = "Please don't be selfish."
+    ABS_TEXT = "Do not send multiple files at a time !"
     DOWNLOAD_START = "📤 Your request is in the queue. Please be patient..."
-    DOWNLOADING = "Downloading..."
-    SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully."
-    UPLOAD_START = "Started to upload..."
+    DOWNLOADING = "Downloading...📥"
+    SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully...📥"
+    UPLOAD_START = "Started to upload...📤"
     AFTER_GET_DL_LINK = """
 <b>Direct Link</b> <a href=\"{}\">generated</a> !
 
