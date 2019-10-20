@@ -21,7 +21,7 @@ users = []
 
 @pyrogram.Client.on_message()
 async def get_link(bot, update):
-    if update.from_user.id in Config.BANNED_USERS:
+    if str(update.from_user.id) in Config.BANNED_USERS:
         await bot.send_message(
             chat_id=update.chat.id,
             text=Translation.ABUSIVE_USERS,
