@@ -10,7 +10,7 @@ class Translation(object):
 
 © Source Code : [SpEcHlDe](https://github.com/SpEcHiDe/AnyDLBot)
     """
-    ABS_TEXT = "Do not send multiple files at a time !"
+    ABS_TEXT = "Do not send multiple files at a time 🚫"
     DOWNLOAD_START = "📤 Your request is in the queue. Please be patient..."
     DOWNLOADING = "Downloading...📥"
     SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully...📥"
