@@ -72,7 +72,7 @@ async def get_link(bot, update):
         progress=progress_for_pyrogram,
         progress_args=(
             bot,
-            Translation.DOWNLOAD_START,
+            Translation.DOWNLOADING,
             a.message_id,
             update.chat.id,
             c_time
