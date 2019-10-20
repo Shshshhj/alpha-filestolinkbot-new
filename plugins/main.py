@@ -11,13 +11,13 @@ import os
 import subprocess
 import time
 import asyncio
+from tools.config import Config
+from tools.progress import progress_for_pyrogram
+from tools.translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
 users = []
 
-from tools.config import Config
-from tools.progress import progress_for_pyrogram
-from tools.translation import Translation
 
 @pyrogram.Client.on_message()
 async def get_link(bot, update):
