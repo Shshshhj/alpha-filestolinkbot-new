@@ -50,7 +50,6 @@ async def get_link(bot, update):
         reply_message = update
     else:
         return
-    logger.info(update.from_user)
     if update.from_user.id not in users:
         users.append(update.from_user.id)
     else:
@@ -106,14 +105,13 @@ async def get_link(bot, update):
         chat_id=update.chat.id,
         message_id=a.message_id
     )
-    logger.info(command_to_exec)
     t_response = await asyncio.create_subprocess_exec(
         *command_to_exec,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
     if t_response.returncode:
-        error = f"ERROR: {t_response.stderr.decode()}"
+        error = f"ERROR: {t_response.stderr}"
         logger.info(error)
         await bot.edit_message_text(
             chat_id=update.chat.id,
@@ -123,8 +121,8 @@ async def get_link(bot, update):
         users.remove(update.from_user.id)
         return
     else:
-        logger.info(t_response.stdout)
-        link = t_response.stdout.decode()
+        logger.info(t_response)
+        link = t_response.stdout
     await bot.edit_message_text(
         chat_id=update.chat.id,
         text=Translation.AFTER_GET_DL_LINK.format(
