@@ -13,7 +13,7 @@ class Translation(object):
 👉 If you dont get directlink after 1 hour, forward that file again to the bot
 👉 Direct links are only for personal use, do not share with others. We are not responsible for any content that you generates direct links.
 
-© Source Code : [SpEcHlDe](https://github.com/SpEcHiDe/AnyDLBot)
+
     """
     ABS_TEXT = "Do not send multiple files at a time 🚫"
     DOWNLOAD_START = "📤 Your request is in the queue. Please be patient..."
