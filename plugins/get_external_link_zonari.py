@@ -118,15 +118,14 @@ async def get_link(bot, update):
         chat_id=update.chat.id,
         message_id=a.message_id
     )
-    try:
-        logger.info(command_to_exec)
-        t_response = await asyncio.create_subprocess_exec(
-            *command_to_exec,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-    except subprocess.CalledProcessError as exc:
-        logger.info(f"Status : FAIL {exc.returncode} {exc.output}")
+    logger.info(command_to_exec)
+    t_response = await asyncio.create_subprocess_exec(
+        *command_to_exec,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE,
+    )
+    if t_response.returncode:
+        logger.info(f"Status : FAIL {t_response.stderr}")
         await bot.edit_message_text(
             chat_id=update.chat.id,
             text=exc.output.decode("UTF-8"),
@@ -134,15 +133,15 @@ async def get_link(bot, update):
         )
         return False
     else:
-        logger.info(t_response)
-        t_response_arry = t_response.decode("UTF-8").split("\n")[-1].strip()
+        logger.info(t_response.stdout)
+        link = t_response.stdout.decode()
 
         #shorten_api_url = "http://ouo.io/api/{}?s={}".format(Config.OUO_IO_API_KEY, t_response_arry)
         #adfulurl = requests.get(shorten_api_url).text
         
     await bot.edit_message_text(
         chat_id=update.chat.id,
-        text=Translation.AFTER_GET_DL_LINK.format(t_response_arry, max_days),
+        text=Translation.AFTER_GET_DL_LINK.format(link, max_days),
         parse_mode="html",
         message_id=a.message_id,
         disable_web_page_preview=True
