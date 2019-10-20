@@ -113,7 +113,7 @@ async def get_link(bot, update):
         stderr=asyncio.subprocess.PIPE,
     )
     if t_response.returncode:
-        error = f"ERROR: {t_response.stderr.decode()}"
+        error = f"ERROR: {t_response.stderr}"
         logger.info(error)
         await bot.edit_message_text(
             chat_id=update.chat.id,
@@ -124,7 +124,7 @@ async def get_link(bot, update):
         return
     else:
         logger.info(t_response.stdout)
-        link = t_response.stdout.decode()
+        link = t_response.stdout
     await bot.edit_message_text(
         chat_id=update.chat.id,
         text=Translation.AFTER_GET_DL_LINK.format(
