@@ -16,6 +16,8 @@ class Translation(object):
     SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully...📥"
     UPLOAD_START = "Started to upload...📤"
     AFTER_GET_DL_LINK = """
+    <b>Direct Link generated 👇</b>
+    
 Name: {}
 Size: {}
 Expiry: {} days
