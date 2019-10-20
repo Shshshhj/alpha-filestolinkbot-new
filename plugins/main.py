@@ -50,8 +50,8 @@ async def get_link(bot, update):
         reply_message = update
     else:
         return
-    #if update.from_user.id not in users:
-    #    users.append(update.from_user.id)
+    if update.from_user.id not in users:
+        users.append(update.from_user.id)
    # else:
     #    await bot.send_message(
      #       chat_id=update.chat.id,
