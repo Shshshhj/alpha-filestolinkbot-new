@@ -17,6 +17,7 @@ class Translation(object):
     """
     ABS_TEXT = "Please don't be selfish."
     DOWNLOAD_START = "📤 Your request is in the queue. Do not send another request. Please be patient..."
+    SAVED_RECVD_DOC_FILE = "Document Downloaded Successfully."
     UPLOAD_START = "Started to upload.."
     AFTER_GET_DL_LINK = """
 <b>Direct Link</b> <a href=\"{}\">generated</a>

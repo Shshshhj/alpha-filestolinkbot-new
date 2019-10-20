@@ -2,32 +2,22 @@
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
 
-# the logging things
 import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 import os
-#import requests
 import subprocess
 import time
 import asyncio
-
-# the secret configuration specific things
-if bool(os.environ.get("WEBHOOK", False)):
-    from sample_config import Config
-else:
-    from config import Config
-
-from translation import Translation
-
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
-
-from helper_funcs.display_progress import progress_for_pyrogram
 users = []
 
+from tools.config import Config
+from tools.progress import progress_for_pyrogram
+from tools.translation import Translation
 
 @pyrogram.Client.on_message()
 async def get_link(bot, update):
