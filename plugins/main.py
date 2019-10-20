@@ -12,7 +12,7 @@ import subprocess
 import time
 import asyncio
 from tools.config import Config
-from tools.progress import progress_for_pyrogram
+from tools.progress import progress_for_pyrogram, humanbytes
 from tools.translation import Translation
 import pyrogram
 logging.getLogger("pyrogram").setLevel(logging.WARNING)
@@ -105,13 +105,14 @@ async def get_link(bot, update):
         chat_id=update.chat.id,
         message_id=a.message_id
     )
-    t_response = await asyncio.create_subprocess_exec(
+    process = await asyncio.create_subprocess_exec(
         *command_to_exec,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
-    if t_response.returncode:
-        error = f"ERROR: {t_response.stderr}"
+    stdout, stderr = await process.communicate()
+    if process.returncode:
+        error = f"ERROR: {stderr.decode()}"
         logger.info(error)
         await bot.edit_message_text(
             chat_id=update.chat.id,
@@ -121,14 +122,14 @@ async def get_link(bot, update):
         users.remove(update.from_user.id)
         return
     else:
-        logger.info(t_response)
-        link = t_response.stdout
+        link = stdout.decode()
+        logger.info(link)
     await bot.edit_message_text(
         chat_id=update.chat.id,
         text=Translation.AFTER_GET_DL_LINK.format(
             link,
             filename,
-            filesize,
+            await humanbytes(filesize),
             max_days
         ),
         parse_mode="html",
