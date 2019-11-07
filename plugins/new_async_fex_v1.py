@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # (c) Shrimadhav U K
 
+
 import logging
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -162,7 +163,7 @@ async def get_link(bot, update):
             '-H', 'Pragma: no-cache',
             '-H', 'Cache-Control: no-cache',
             '-H', 'TE: Trailers',
-            '-T', "test.txt",
+            '-T', after_download_file_name,
             url
         ]
 
