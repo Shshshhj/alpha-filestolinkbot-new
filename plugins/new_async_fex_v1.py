@@ -143,7 +143,7 @@ async def get_link(bot, update):
         pass
     
     url = file_upload['location']
-    max_days = "7"
+    max_days = "3"
     command_to_exec = [
             "curl",
             # "-g",
