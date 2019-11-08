@@ -84,11 +84,11 @@ async def get_link(bot, update):
             c_time
         )
     )
-    await bot.edit_message_text(
+    '''await bot.edit_message_text(
         text='📤 Uploading file...',
         chat_id=update.chat.id,
         message_id=a.message_id
-    )
+    )'''
     
     filesize = os.path.getsize(after_download_file_name)
     filename = os.path.basename(after_download_file_name)
