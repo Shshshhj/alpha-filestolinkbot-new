@@ -95,7 +95,7 @@ async def get_link(bot, update):
     filename = os.path.basename(after_download_file_name)
     download_extension = after_download_file_name.rsplit(".", 1)[-1]
     end_one = datetime.now()
-    url = "https://transfer.sh/{}/{}".format(str(update.from_user.id), str(filename))
+    url = "https://transfer.sh/{}".format(str(filename))
     max_days = "5"
     command_to_exec = [
         "curl",
