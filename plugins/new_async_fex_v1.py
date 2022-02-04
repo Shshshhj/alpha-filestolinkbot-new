@@ -12,6 +12,7 @@ import aiohttp
 import uuid
 import re
 import json
+from datetime import datetime
 
 import os
 import subprocess
@@ -92,123 +93,49 @@ async def get_link(bot, update):
     
     filesize = os.path.getsize(after_download_file_name)
     filename = os.path.basename(after_download_file_name)
-
-    # upload
-    session = aiohttp.ClientSession()
-    async with session.get('https://api.fex.net/api/v1/anonymous/upload-token') as resp:
-        token = json.loads((await resp.text()))['token']
-        
-    print(token)
-    
-    data = {'directory_id':None, 'size':filesize, 'name':filename}
-    headers = {
-        'Authorization': 'Bearer ' + token,
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0',
-        'Accept': '*/*',
-        'Accept-Language': ' en-US,en;q=0.5',
-        'Accept-Encoding': ' gzip, deflate, br',
-        'Referer': ' https://fex.net/a',
-        'Content-Type': ' application/json',
-        'Origin': ' https://fex.net',
-        'Connection': ' keep-alive',
-        'Pragma': ' no-cache',
-        'Cache-Control': ' no-cache',
-        'TE': ' Trailers'
-    }
-    async with session.post('https://api.fex.net/api/v1/anonymous/file', data=json.dumps(data), headers=headers) as resp:
-        file_upload = json.loads(await resp.text())
-        print(file_upload['location'])
-        
-    
-    headers = {
-        'Authorization': 'Bearer ' + token,
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0',
-        'Accept': '*/*',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Referer': 'https://fex.net/a',
-        'Content-Type': 'application/json',
-        'Fsp-Size': str(filesize),
-        'Fsp-Version': '1.0.0',
-        'Fsp-FileName': filename,
-        'Origin': 'https://fex.net',
-        'Connection': 'keep-alive',
-        'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache',
-        'Content-Length': '0',
-        'TE': 'Trailers',
-        }
-            
-    async with session.post(file_upload['location'], headers=headers) as resp:
-        pass
-    
-    url = file_upload['location']
-    max_days = "3"
+    download_extension = after_download_file_name.rsplit(".", 1)[-1]
+    end_one = datetime.now()
+    url = "https://transfer.sh/{}".format(str(filename))
+    max_days = "5"
     command_to_exec = [
-            "curl",
-            # "-g",
-            # '-v',
-            # '--progress-bar',
-            '-X', 'PATCH',
-            '-H', 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0',
-            '-H', 'Referer: https://fex.net/a',
-            '-H', 'Authorization: Bearer ' + token,
-            '-H', 'Content-Type: application/offset+octet-stream',
-            '-H', 'Fsp-Version: 1.0.0',
-            '-H', 'Fsp-Offset: 0',
-            '-H', 'Fsp-FileName: ' + filename,
-            '-H', 'Origin: https://fex.net',
-            '-H', 'Content-Length: ' + str(filesize),
-            '-H', 'Connection: keep-alive',
-            '-H', 'Pragma: no-cache',
-            '-H', 'Cache-Control: no-cache',
-            '-H', 'TE: Trailers',
-            '-T', after_download_file_name,
-            url
-        ]
-
+        "curl",
+        # "-H", 'Max-Downloads: 1',
+        "-H", 'Max-Days: 5', # + max_days + '',
+        "--upload-file", after_download_file_name,
+        url
+    ]
     await bot.edit_message_text(
         text=Translation.UPLOAD_START,
         chat_id=update.chat.id,
         message_id=a.message_id
     )
-    process = await asyncio.create_subprocess_exec(
-        *command_to_exec,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE,
-    )
-    stdout, stderr = await process.communicate()
-    if process.returncode:
-        error = f"ERROR: {stderr.decode()}"
-        logger.info(error)
+    try:
+        logger.info(command_to_exec)
+        t_response = subprocess.check_output(command_to_exec, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as exc:
+        logger.info("Status : FAIL", exc.returncode, exc.output)
         await bot.edit_message_text(
             chat_id=update.chat.id,
-            text=error,
+            text=exc.output.decode("UTF-8"),
             message_id=a.message_id
         )
-        users.remove(update.from_user.id)
-        await session.close()
-        return
+        return False
     else:
-        response = stdout.decode()
-        logger.info(response)
-        
-        download = json.loads(response)
+        logger.info(t_response)
+        t_response_arry = t_response.decode("UTF-8").split("\n")[-1].strip()
         await bot.edit_message_text(
             chat_id=update.chat.id,
             text=Translation.AFTER_GET_DL_LINK.format(
                 filename,
                 await humanbytes(filesize),
                 max_days,
-                download['download_url']
+                t_response_arry
             ),
             parse_mode="html",
             message_id=a.message_id,
             disable_web_page_preview=True
         )
-        await session.close()
         return       
-    
     try:
         users.remove(update.from_user.id)
         os.remove(after_download_file_name)
